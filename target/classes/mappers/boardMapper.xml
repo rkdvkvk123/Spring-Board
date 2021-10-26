@@ -5,6 +5,7 @@
 <mapper namespace="com.board.mappers.boardMapper">
 
 
+
 	<!-- 게시물 목록 -->
 	<select id="list" resultType="com.board.domain.BoardVO">
 		select
@@ -31,8 +32,7 @@
 		update myBoard
 		set
 		title = #{title},
-		content =
-		#{content}
+		content = #{content}
 		where bno = #{bno}
 	</update>
 

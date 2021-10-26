@@ -13,5 +13,6 @@
 <P>  The time on the server is ${serverTime}. </P>
 
 <p><a href="/board/list">게시물 목록</a></p>
+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
 </body>
 </html>
