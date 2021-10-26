@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.board.domain.BoardVO;
 import com.board.service.BoardService;
@@ -29,6 +30,7 @@ public class BoardController {
 		 logger.info("URL : http://localhost:8090/board/write");
 	 }
 	
+	 
 	 @RequestMapping(value = "/write",method = RequestMethod.POST)
 	 public String postWrite(BoardVO boardVO) throws Exception {
 		 logger.info("========= 게시물 작성 준비 중.... =========");
@@ -55,6 +57,17 @@ public class BoardController {
 		 List<BoardVO> list = boardService.list();
 		 
 		 model.addAttribute("list",list);
+	 }
+	 
+	 @RequestMapping(value = "/read",method = RequestMethod.GET)
+	 public void getRead(@RequestParam("bno") int bno, Model model) throws Exception {
+		 logger.info("========= 해당 게시물 페이지 =========");
+		 
+		 BoardVO boardVO = boardService.read(bno);
+		 
+		 model.addAttribute("read",boardVO);
+		 
+		 logger.info("URL : http://localhost:8090/board/read?bno=" + bno);
 	 }
 	 
 	 
