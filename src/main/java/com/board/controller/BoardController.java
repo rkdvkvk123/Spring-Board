@@ -39,6 +39,7 @@ public class BoardController {
 		 }catch(Exception e) {
 			 logger.info("========= 게시물 작성 실패!!!! =========");
 			 e.printStackTrace();
+			 return "redirect:/write";
 		 }
 		 
 		 return "redirect:/";
