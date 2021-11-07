@@ -9,7 +9,8 @@
 	<!-- 게시물 목록 -->
 	<select id="list" resultType="com.board.domain.BoardVO">
 		select
-		bno, title, content, writer, regDate, viewCnt
+		bno, title, content, writer,
+		regDate, viewCnt
 		from myBoard
 	</select>
 
@@ -32,7 +33,8 @@
 		update myBoard
 		set
 		title = #{title},
-		content = #{content}
+		content =
+		#{content}
 		where bno = #{bno}
 	</update>
 
@@ -43,4 +45,65 @@
 		where bno = #{bno}
 	</delete>
 
+	<select id="listPage" resultType="com.board.domain.BoardVO"
+		parameterType="com.board.domain.Criteria">
+		select bno, title, content, writer, regDate, viewCnt
+		from (
+		select bno, title, content, writer, regDate, viewCnt,
+		row_number() over(order by bno desc) as rNum
+		from myBoard
+		) mb
+		where rNum
+		between #{rowStart} and #{rowEnd}
+		order by bno desc
+	</select>
+
+	<select id="listCount" resultType="int">
+		<![CDATA[
+			select count(bno)
+				from myBoard
+					where bno > 0
+		]]>
+
+	</select>
+
+	<!-- 검색 -->
+	<select id="listSearch" resultType="com.board.domain.BoardVO"
+		parameterType="com.board.domain.SearchCriteria">
+		select bno, title, content, writer, regDate, viewCnt
+		from (
+		select bno, title, content, writer, regDate, viewCnt,
+		row_number() over(order by bno desc) as rNum
+		from myBoard
+		<include refid="search"></include>
+		) mb
+		where rNum between #{rowStart} and #{rowEnd}
+		order by bno desc
+	</select>
+	
+	
+<sql id="search">
+ <if test="searchType != null">
+  <if test="searchType == 't'.toString()">where title like '%' || #{keyword} || '%'</if>
+  <if test="searchType == 'c'.toString()">where content like '%' || #{keyword} || '%'</if>
+  <if test="searchType == 'w'.toString()">where writer like '%' || #{keyword} || '%'</if>
+  <if test="searchType == 'tc'.toString()">where (title like '%' || #{keyword} || '%') or (content like '%' || #{keyword} || '%')</if>
+ </if>
+</sql>
+
+
+
+<select id="countSearch" resultType="int">
+ select count(bno)
+  from myBoard
+   where
+   <include refid="search"></include>
+<![CDATA[
+    and bno > 0
+]]>
+</select>
+	
+
+	
+	
 </mapper>
